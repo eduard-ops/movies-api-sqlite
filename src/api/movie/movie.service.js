@@ -1,5 +1,5 @@
 const { createError, parceFile } = require("../../helpers");
-const { Op } = require("sequelize");
+const { Op, fn, col } = require("sequelize");
 const { Star, Movie } = require("../../models");
 
 class MovieService {
@@ -75,15 +75,23 @@ class MovieService {
   }
 
   async getMovieList(params) {
+    const {
+      title,
+      actor,
+      sort = "id",
+      order = "ASC",
+      limit = 20,
+      offset = 0,
+    } = params;
     const filter = {};
 
     const includeOptions = [];
 
-    if (params.title) {
+    if (title) {
       filter.title = { [Op.like]: `${params.title}%` };
     }
 
-    if (params.actor) {
+    if (actor) {
       includeOptions.push({
         model: Star,
         as: "stars",
@@ -95,13 +103,13 @@ class MovieService {
       });
     }
 
-    const movies = await Movie.findAll({
+    return await Movie.findAll({
       where: filter,
       include: includeOptions,
-      order: [["title", "ASC"]],
+      order: [[fn("LOWER", col(sort)), order]],
+      offset,
+      limit,
     });
-
-    return movies;
   }
 
   async uploadFile(file) {
