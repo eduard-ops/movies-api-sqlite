@@ -15,4 +15,4 @@ docker run --name movies -p 4000:3000 -e APP_PORT=3000 edwardops/movies-api-sqli
 
 link dockerhub
 
-https://hub.docker.com/layers/edwardops/movies-api-sqlite/latest/images/sha256-1e5e1ca0cabc6bb4014168bbfcafbc32608e52a145d50843679ec01534247aed?context=repo
+https://hub.docker.com/layers/edwardops/movies-api-sqlite/latest/images/sha256-b928ff94e7384c0050883f1890a412271650d8e62543c7288a0b0d63bd00a3f7?context=repo
