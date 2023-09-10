@@ -37,7 +37,7 @@ class MovieService {
       include: {
         model: Star,
         as: "stars",
-        attributes: ["id", "name", "createdAt", "updatedAt"],
+        attributes: ["id", "name"],
         through: { attributes: [] },
       },
       attributes: ["id", "title", "format", "year"],
@@ -88,14 +88,14 @@ class MovieService {
     const includeOptions = [];
 
     if (title) {
-      filter.title = { [Op.like]: `${params.title}%` };
+      filter.title = { [Op.like]: `${title}%` };
     }
 
     if (actor) {
       includeOptions.push({
         model: Star,
         as: "stars",
-        attributes: ["id", "name", "createdAt", "updatedAt"],
+        attributes: ["id", "name"],
         through: { attributes: [] },
         where: {
           name: { [Op.like]: `${params.actor}%` },
@@ -103,13 +103,14 @@ class MovieService {
       });
     }
 
-    return await Movie.findAll({
+    const d = await Movie.findAll({
       where: filter,
       include: includeOptions,
-      order: [[fn("LOWER", col(sort)), order]],
+      order: [[(fn("LOWER"), col(sort)), order]],
       offset,
       limit,
     });
+    return d;
   }
 
   async uploadFile(file) {
